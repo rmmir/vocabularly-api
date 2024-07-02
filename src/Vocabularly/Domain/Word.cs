@@ -7,5 +7,4 @@ public class Word
     public required string ForeignWord { get; set; }
     public string? EnglishExample { get; set; } = null;
     public string? ForeignExample { get; set; } = null;
-
 }
