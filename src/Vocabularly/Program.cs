@@ -17,6 +17,8 @@ var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 {
     app.MapControllers();
+
+    DbService.InitializeMigration(app);
 }
 
 app.Run();
