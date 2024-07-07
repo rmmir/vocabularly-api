@@ -1,56 +1,37 @@
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vocabularly.Domain;
-using Vocabularly.Services;
+using Vocabularly.Features.Words.CreateWord;
+using Vocabularly.Features.Words.GetWordById;
 
 namespace Vocabularly.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class WordsController(WordsService wordsService) : ControllerBase
+public class WordsController(ISender sender) : ControllerBase
 {
-    private readonly WordsService _wordsService = wordsService;
+    private readonly ISender _sender = sender;
 
     [HttpPost]
-    public IActionResult Create(CreateWordRequest request)
+    public async Task<ActionResult<Word>> Create(CreateWordCommand command)
     {
-        var word = request.ToDomain();
-
-        _wordsService.Create(word);
+        var word = await _sender.Send(command);
 
         return CreatedAtAction(
             nameof(Get),
-            new { WordId = word.Id },
-            WordResponse.FromDomain(word));
+            new { WordId = word.Id });
     }
 
     [HttpGet("{wordId:guid}")]
-    public IActionResult Get(Guid wordId)
+    public async Task<IActionResult> Get(Guid wordId)
     {
-        var wordResponse = _wordsService.Get(wordId);
+        var word = await _sender.Send(new GetWordByIdQuery(wordId));
 
-        return wordResponse is null
+        return word is null
             ? Problem(
                 statusCode: StatusCodes.Status404NotFound,
                 detail: $"Word with id '{wordId}' could not be found.")
-            : Ok(WordResponse.FromDomain(wordResponse));
-    }
-
-    public record CreateWordRequest(
-        string EnglishWord,
-        string ForeignWord,
-        string? EnglishExample = null,
-        string? ForeignExample = null)
-    {
-        public Word ToDomain()
-        {
-            return new Word
-            {
-                EnglishWord = EnglishWord,
-                ForeignWord = ForeignWord,
-                EnglishExample = EnglishExample,
-                ForeignExample = ForeignExample,
-            };
-        }
+            : Ok(word);
     }
 
     // public enum WordType 
@@ -64,23 +45,4 @@ public class WordsController(WordsService wordsService) : ControllerBase
     //     Conjunction,
     //     Interjection,
     // }
-
-    public record WordResponse(
-        Guid Id,
-        string EnglishWord,
-        string ForeignWord,
-        string? EnglishExample = null,
-        string? ForeignExample = null)
-        // WordType Type)
-    {
-        public static WordResponse FromDomain(Word word)
-        {
-            return new WordResponse(
-                word.Id,
-                word.EnglishWord,
-                word.ForeignWord,
-                word.EnglishExample,
-                word.ForeignExample);
-        }
-    }
 }
