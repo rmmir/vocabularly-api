@@ -19,7 +19,8 @@ public class WordsController(ISender sender) : ControllerBase
 
         return CreatedAtAction(
             nameof(Get),
-            new { WordId = word.Id });
+            new { WordId = word.Id },
+            word);
     }
 
     [HttpGet("{wordId:guid}")]

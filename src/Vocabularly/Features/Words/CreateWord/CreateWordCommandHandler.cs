@@ -1,13 +1,13 @@
 
 using MediatR;
-
 using Vocabularly.Domain;
+using Vocabularly.Persistence;
 
 namespace Vocabularly.Features.Words.CreateWord;
 
-public class CreateWordCommandHandler : IRequestHandler<CreateWordCommand, Word>
+public class CreateWordCommandHandler(ApplicationDbContext dbContext) : IRequestHandler<CreateWordCommand, Word>
 {
-    private static readonly List<Word> WordsRepository = [];
+    private readonly ApplicationDbContext _dbContext = dbContext;
 
     public async Task<Word> Handle(CreateWordCommand request, CancellationToken cancellationToken)
     {
@@ -19,7 +19,8 @@ public class CreateWordCommandHandler : IRequestHandler<CreateWordCommand, Word>
             ForeignExample =  request.ForeignExample,
         };
 
-        WordsRepository.Add(word);
+        _dbContext.Words.Add(word);
+        await _dbContext.SaveChangesAsync(cancellationToken);
 
         return word;
     }

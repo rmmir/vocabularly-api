@@ -1,16 +1,18 @@
 
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Vocabularly.Domain;
+using Vocabularly.Persistence;
 
 namespace Vocabularly.Features.Words.GetWordById;
 
-public class GetWordByIdQueryHandler : IRequestHandler<GetWordByIdQuery, Word?>
+public class GetWordByIdQueryHandler(ApplicationDbContext dbContext) : IRequestHandler<GetWordByIdQuery, Word?>
 {
-    private static readonly List<Word> WordsRepository = [];
+    private readonly ApplicationDbContext _dbContext = dbContext;
 
     public async Task<Word?> Handle(GetWordByIdQuery request, CancellationToken cancellationToken)
     {
-        var word = WordsRepository.Find(x => x.Id == request.Id);
+        var word = await _dbContext.Words.SingleOrDefaultAsync(w => w.Id == request.Id, cancellationToken);
     
         return word;
     }

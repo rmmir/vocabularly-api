@@ -18,7 +18,7 @@ var app = builder.Build();
 {
     app.MapControllers();
 
-    // DbService.InitializeMigration(app);
+    DbService.InitializeMigration(app);
 }
 
 app.Run();
