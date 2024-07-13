@@ -14,10 +14,12 @@ services:
     depends_on:
       db:
         condition: service_healthy
-    develop:
-      watch:
-        - action: rebuild
-          path: .
+    volumes:
+      - ./src/Vocabularly:/app/Vocabularly
+      - /app/Vocabularly/bin
+      - /app/Vocabularly/obj
+      - ~/.nuget/packages:/root/.nuget/packages:ro
+    command: dotnet watch run --urls=http://0.0.0.0:5001
 
   db:
     container_name: vocabularly_db

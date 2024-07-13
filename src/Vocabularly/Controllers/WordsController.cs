@@ -2,6 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vocabularly.Domain;
 using Vocabularly.Features.Words.CreateWord;
+using Vocabularly.Features.Words.GetAllWords;
 using Vocabularly.Features.Words.GetWordById;
 
 namespace Vocabularly.Controllers;
@@ -18,13 +19,21 @@ public class WordsController(ISender sender) : ControllerBase
         var word = await _sender.Send(command);
 
         return CreatedAtAction(
-            nameof(Get),
+            nameof(GetById),
             new { WordId = word.Id },
             word);
     }
 
+    [HttpGet]
+    public async Task<IActionResult> GetAll()
+    {
+        var words = await _sender.Send(new GetAllWordsQuery());
+
+        return Ok(words);
+    }
+
     [HttpGet("{wordId:guid}")]
-    public async Task<IActionResult> Get(Guid wordId)
+    public async Task<IActionResult> GetById(Guid wordId)
     {
         var word = await _sender.Send(new GetWordByIdQuery(wordId));
 

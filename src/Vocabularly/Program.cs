@@ -1,5 +1,7 @@
+using MediatR;
 using Microsoft.EntityFrameworkCore;
-
+using Vocabularly.Domain;
+using Vocabularly.Features.Words.CreateWord;
 using Vocabularly.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +14,9 @@ var builder = WebApplication.CreateBuilder(args);
     });
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
+    builder.Services.AddTransient(typeof(IPipelineBehavior<CreateWordCommand, Word>), typeof(CreateWordValidator));
+    builder.Services.AddTransient<IRequestHandler<CreateWordCommand, Word>, CreateWordCommandHandler>();
 }
 
 var app = builder.Build();

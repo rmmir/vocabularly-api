@@ -1,25 +1,25 @@
-# Build
-FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
+# Use the SDK image for building and running the app
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 
-WORKDIR /src
+WORKDIR /app
 
-# Restore
-COPY ["src/Vocabularly/Vocabularly.csproj", "Vocabularly/"]
+# Copy the csproj and restore as distinct layers
+COPY ["src/Vocabularly/Vocabularly.csproj", "./Vocabularly/"]
 RUN dotnet restore "Vocabularly/Vocabularly.csproj"
 
-# Build
-COPY ["src/Vocabularly", "Vocabularly/"]
-WORKDIR /src/Vocabularly
+# Copy everything else and build
+COPY ["src/Vocabularly", "./Vocabularly/"]
+WORKDIR /app/Vocabularly
+
+# Perform build so that the bin and obj directories are created
 RUN dotnet build "Vocabularly.csproj" -c Release -o /app/build
 
-# Publish
-FROM build as publish
-RUN dotnet publish "Vocabularly.csproj" -c Release -o /app/publish
+# Use the build image to run the application
+FROM mcr.microsoft.com/dotnet/sdk:8.0
 
-# Run
-FROM mcr.microsoft.com/dotnet/aspnet:8.0
-ENV ASPNETCORE_HTTP_PORTS=5001
-EXPOSE 5001
-WORKDIR /app
-COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "Vocabularly.dll"]
+WORKDIR /app/Vocabularly
+
+COPY --from=build /root/.nuget/packages /root/.nuget/packages
+COPY --from=build /app/Vocabularly /app/Vocabularly
+
+ENTRYPOINT ["dotnet", "watch", "run", "--urls=http://0.0.0.0:5001"]
