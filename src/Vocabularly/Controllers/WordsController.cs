@@ -1,9 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Vocabularly.Domain;
-using Vocabularly.Features.Words.CreateWord;
 using Vocabularly.Features.Words.GetAllWords;
 using Vocabularly.Features.Words.GetWordById;
+using Vocabularly.Features.Words.CreateWord;
+using Vocabularly.Features.Words.DeleteWord;
+using Vocabularly.Features.Words.EditWord;
 
 namespace Vocabularly.Controllers;
 
@@ -12,17 +14,6 @@ namespace Vocabularly.Controllers;
 public class WordsController(ISender sender) : ControllerBase
 {
     private readonly ISender _sender = sender;
-
-    [HttpPost]
-    public async Task<ActionResult<Word>> Create(CreateWordCommand command)
-    {
-        var word = await _sender.Send(command);
-
-        return CreatedAtAction(
-            nameof(GetById),
-            new { WordId = word.Id },
-            word);
-    }
 
     [HttpGet]
     public async Task<IActionResult> GetAll()
@@ -42,6 +33,25 @@ public class WordsController(ISender sender) : ControllerBase
                 statusCode: StatusCodes.Status404NotFound,
                 detail: $"Word with id '{wordId}' could not be found.")
             : Ok(word);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<Word>> Create(CreateWordCommand command)
+    {
+        var word = await _sender.Send(command);
+
+        return CreatedAtAction(
+            nameof(GetById),
+            new { WordId = word.Id },
+            word);
+    }
+
+    [HttpDelete("{wordId:guid}")]
+    public async Task<OkResult> Delete(Guid wordId)
+    {
+        await _sender.Send(new DeleteWordCommand(wordId));
+
+        return Ok();
     }
 
     // public enum WordType 
