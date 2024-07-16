@@ -6,7 +6,7 @@ using Vocabularly.Persistence;
 
 namespace Vocabularly.Features.Words.GetAllWords;
 
-public class GetAllWordsQueryHandler(ApplicationDbContext dbContext) : IRequestHandler<GetAllWordsQuery, IEnumerable<Word>>
+internal sealed class GetAllWordsQueryHandler(ApplicationDbContext dbContext) : IRequestHandler<GetAllWordsQuery, IEnumerable<Word>>
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 

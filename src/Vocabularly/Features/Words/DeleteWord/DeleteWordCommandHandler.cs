@@ -4,7 +4,7 @@ using Vocabularly.Persistence;
 
 namespace Vocabularly.Features.Words.DeleteWord;
 
-public class DeleteWordCommandHandler(ApplicationDbContext dbContext) : IRequestHandler<DeleteWordCommand, Guid>
+internal sealed class DeleteWordCommandHandler(ApplicationDbContext dbContext) : IRequestHandler<DeleteWordCommand, Guid>
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 

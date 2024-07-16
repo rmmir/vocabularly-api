@@ -2,7 +2,7 @@ using MediatR;
 
 namespace Vocabularly.Features.Words.UpdateWord;
 
-public record UpdateWordCommand(
+ public sealed record UpdateWordCommand(
     Guid Id,
     string EnglishWord,
     string ForeignWord,

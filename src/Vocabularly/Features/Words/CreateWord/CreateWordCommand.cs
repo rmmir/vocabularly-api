@@ -3,7 +3,7 @@ using Vocabularly.Domain;
 
 namespace Vocabularly.Features.Words.CreateWord;
 
-public record CreateWordCommand(
+public sealed record CreateWordCommand(
     string EnglishWord,
     string ForeignWord,
     string? EnglishExample = null,

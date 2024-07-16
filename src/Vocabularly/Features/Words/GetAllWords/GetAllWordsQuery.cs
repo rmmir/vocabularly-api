@@ -3,4 +3,4 @@ using Vocabularly.Domain;
 
 namespace Vocabularly.Features.Words.GetAllWords;
 
-public record GetAllWordsQuery() : IRequest<IEnumerable<Word>>;
+public sealed record GetAllWordsQuery() : IRequest<IEnumerable<Word>>;

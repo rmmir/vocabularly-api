@@ -6,7 +6,7 @@ using Vocabularly.Persistence;
 
 namespace Vocabularly.Features.Words.CreateWord;
 
-public class UpdateWordCommandHandler(ApplicationDbContext dbContext) : IRequestHandler<UpdateWordCommand, Guid>
+internal sealed class UpdateWordCommandHandler(ApplicationDbContext dbContext) : IRequestHandler<UpdateWordCommand, Guid>
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
