@@ -5,7 +5,7 @@ using Vocabularly.Features.Words.GetAllWords;
 using Vocabularly.Features.Words.GetWordById;
 using Vocabularly.Features.Words.CreateWord;
 using Vocabularly.Features.Words.DeleteWord;
-using Vocabularly.Features.Words.EditWord;
+using Vocabularly.Features.Words.UpdateWord;
 
 namespace Vocabularly.Controllers;
 
@@ -46,12 +46,18 @@ public class WordsController(ISender sender) : ControllerBase
             word);
     }
 
-    [HttpDelete("{wordId:guid}")]
-    public async Task<OkResult> Delete(Guid wordId)
+    [HttpPut("{wordId:guid}")]
+    public async Task<ActionResult<Word>> Update(Guid wordId, UpdateWordCommand command)
     {
-        await _sender.Send(new DeleteWordCommand(wordId));
+        var sendCommand = command with { Id = wordId };
+        
+        return Ok(await _sender.Send(sendCommand));
+    }
 
-        return Ok();
+    [HttpDelete("{wordId:guid}")]
+    public async Task<ActionResult<Guid>> Delete(Guid wordId)
+    {
+        return Ok(await _sender.Send(new DeleteWordCommand(wordId)));
     }
 
     // public enum WordType 

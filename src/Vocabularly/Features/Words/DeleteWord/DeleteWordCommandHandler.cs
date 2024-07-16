@@ -4,11 +4,11 @@ using Vocabularly.Persistence;
 
 namespace Vocabularly.Features.Words.DeleteWord;
 
-public class DeleteWordCommandHandler(ApplicationDbContext dbContext) : IRequestHandler<DeleteWordCommand>
+public class DeleteWordCommandHandler(ApplicationDbContext dbContext) : IRequestHandler<DeleteWordCommand, Guid>
 {
     private readonly ApplicationDbContext _dbContext = dbContext;
 
-    public async Task Handle(DeleteWordCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(DeleteWordCommand request, CancellationToken cancellationToken)
     {
         var word = await _dbContext.Words.SingleOrDefaultAsync(w => w.Id == request.Id, cancellationToken);
 
@@ -16,5 +16,7 @@ public class DeleteWordCommandHandler(ApplicationDbContext dbContext) : IRequest
 
         _dbContext.Words.Remove(word);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return word.Id;
     }
 }
