@@ -15,11 +15,13 @@ namespace Vocabularly.Migrations
                 name: "Words",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    EnglishWord = table.Column<string>(type: "text", nullable: false),
-                    ForeignWord = table.Column<string>(type: "text", nullable: false),
-                    EnglishExample = table.Column<string>(type: "text", nullable: true),
-                    ForeignExample = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    EnglishWord = table.Column<string>(type: "TEXT", nullable: false),
+                    ForeignWord = table.Column<string>(type: "TEXT", nullable: false),
+                    EnglishExample = table.Column<string>(type: "TEXT", nullable: true),
+                    ForeignExample = table.Column<string>(type: "TEXT", nullable: true),
+                    Score = table.Column<int>(type: "INTEGER", nullable: false),
+                    Type = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {

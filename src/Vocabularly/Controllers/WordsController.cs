@@ -59,16 +59,4 @@ public class WordsController(ISender sender) : ControllerBase
     {
         return Ok(await _sender.Send(new DeleteWordCommand(wordId)));
     }
-
-    // public enum WordType 
-    // {
-    //     Substantive,
-    //     Verb,
-    //     Adjective,
-    //     Pronoun,
-    //     Adverbs,
-    //     Preposition,
-    //     Conjunction,
-    //     Interjection,
-    // }
 }
