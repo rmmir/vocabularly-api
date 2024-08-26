@@ -6,5 +6,5 @@ namespace Vocabularly.Features.Words.UpdateWord;
     Guid Id,
     string EnglishWord,
     string ForeignWord,
-    string? EnglishExample = null,
-    string? ForeignExample = null) : IRequest<Guid>;
+    string EnglishExample = null,
+    string ForeignExample = null) : IRequest<Guid>;
