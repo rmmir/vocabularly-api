@@ -8,13 +8,16 @@ using Microsoft.IdentityModel.Tokens;
 
 using Vocabularly.Domain;
 using Vocabularly.Features.Words.CreateWord;
+using Vocabularly.Interfaces;
 using Vocabularly.Persistence;
+using Vocabularly.Services;
 using Vocabularly.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 {
     var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
 
+    builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
     builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -28,9 +31,9 @@ var builder = WebApplication.CreateBuilder(args);
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = jwtSettings?.Issuer,
-            ValidAudience = jwtSettings?.Audience,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings?.SecretKey ?? "fallback-key"))
+            ValidIssuer = jwtSettings.Issuer,
+            ValidAudience = jwtSettings.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
         };
     });
 
@@ -44,6 +47,8 @@ var builder = WebApplication.CreateBuilder(args);
         options.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
+    builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
+    builder.Services.AddScoped<IUserService, UserService>();
     builder.Services.AddMediatR(cfg =>
         cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 

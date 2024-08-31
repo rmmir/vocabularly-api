@@ -1,5 +1,6 @@
 ﻿using MediatR;
 
+using Vocabularly.DTOs;
 using Vocabularly.Interfaces;
 
 namespace Vocabularly.Features.Auth.Login
@@ -23,7 +24,7 @@ namespace Vocabularly.Features.Auth.Login
                 return new AuthenticationResult
                 {
                     Success = false,
-                    Errors = new[] { "Invalid username or password" }
+                    Errors = ["Invalid username or password"]
                 };
             }
 

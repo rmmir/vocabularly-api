@@ -4,7 +4,7 @@ namespace Vocabularly.Interfaces
 {
     public interface IUserService
     {
-        Task<User> GetUserByIdAsync(string email);
+        Task<User> GetUserByEmailAsync(string email);
 
         Task<User> ValidateUserAsync(string username, string password);
 

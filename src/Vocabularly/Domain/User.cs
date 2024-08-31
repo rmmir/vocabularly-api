@@ -1,6 +1,4 @@
-﻿using System.Security.Claims;
-
-namespace Vocabularly.Domain
+﻿namespace Vocabularly.Domain
 {
     public class User
     {
@@ -12,10 +10,10 @@ namespace Vocabularly.Domain
 
         public string Password { get; set; }
 
-        public string Role { get; set; }
+        public string Role { get; set; } = "User";
 
         public DateTime DateCreated { get; set; } = DateTime.UtcNow;
 
-        public DateTime DateUpdated { get; set; }
+        public DateTime DateUpdated { get; set; } = DateTime.UtcNow;
     }
 }
